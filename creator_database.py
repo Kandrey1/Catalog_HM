@@ -10,7 +10,18 @@ def create_table(sql):
         cur = con.cursor()
         cur.executescript(sql)
 
-# TODO таблица материалов
+
+def create_table_materials():
+    """ Таблица материалов для изделия """
+    sql = """
+			DROP TABLE IF EXISTS materials;
+            CREATE TABLE IF NOT EXISTS materials (
+            id_material INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            name TEXT NOT NULL,
+            unit TEXT NOT NULL,
+            vendor TEXT)
+            """
+    create_table(sql)
 # TODO таблица изделий
 # TODO таблица заказов
 # TODO таблица покупок
@@ -35,6 +46,7 @@ def create_table_customers():
 
 def create_database_catalog_hm():
     """ Запускает создание таблиц в базе данных"""
+    create_table_materials()
     create_table_customers()
 
 

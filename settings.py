@@ -14,4 +14,5 @@ size_button_medium = (120, 30)
 size_button_large = (140, 40)
 
 dict_tables_database = {'customers_database': "customers",
+                        'materials_database': "materials",
                         }

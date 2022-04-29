@@ -2,6 +2,8 @@ import wx
 
 from customer_add import DialogAddCustomer
 from customers_window_db import DialogAllCustomers
+from material_add import DialogAddMaterial
+from material_window_add import DialogAllMaterials
 
 
 class MenuBar(wx.MenuBar):
@@ -44,6 +46,9 @@ class MenuBar(wx.MenuBar):
 		self.products_all = wx.MenuItem(self.products_menu, wx.ID_ANY, 'Все товары')
 		self.products_menu.Append(self.products_all)
 		self.Append(self.products_menu, "Товары")
+
+		self.Bind(wx.EVT_MENU, self.on_material_add, self.material_add)
+		self.Bind(wx.EVT_MENU, self.on_materials_all, self.materials_all)
 #   ----------------------------- Товары ---------------------------------------
 #   ----------------------------- Помощь ---------------------------------------
 		self.help_menu = wx.Menu()
@@ -72,4 +77,14 @@ class MenuBar(wx.MenuBar):
 		dlg.ShowModal()
 		dlg.Destroy()
 
+	def on_material_add(self, event):
+		""" Добавляет материал """
+		dlg = DialogAddMaterial(self.parent, title="Добавить новый материал")
+		dlg.ShowModal()
+		dlg.Destroy()
 
+	def on_materials_all(self, event):
+		""" Окно всех материалов в БД """
+		dlg = DialogAllMaterials(self.parent)
+		dlg.ShowModal()
+		dlg.Destroy()
