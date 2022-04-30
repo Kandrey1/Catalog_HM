@@ -10,11 +10,11 @@ class DialogAllCustomers(BaseDialogDatabase):
     def __init__(self, parent, title="База данных клиентов"):
         super().__init__(parent, title=title)
 
-        self.__name__ = 'customers_database'
+        self.__name__ = "customers_database"
 
         self.create_columns()
 
-        self.set_data_in_table()
+        func_program.set_data_in_table(self.__name__, self.main_table)
 # ----------------------------- Button start -----------------------------------
 
     def on_new(self, event):
@@ -27,22 +27,6 @@ class DialogAllCustomers(BaseDialogDatabase):
         id_redact = func_program.get_id_focus_line(self.main_table)
         if not id_redact == -1:
             self.call_window_new_or_redact(mode_redact=True, id_redact=id_redact)
-
-    def on_copy(self, event):
-        """ Копирует выбранную запись """
-        row = self.get_row_in_focus()
-        if row:
-            copy_line = customers.Customer()
-            copy_line.set_data_in_class(row[1:])
-            copy_line.write_in_database()
-            self.refresh_data_in_table()
-            func_program.set_cursor_end_table(self.main_table)
-
-    def on_delete(self, event):
-        """ Удаляет выбранную запись """
-        self.id_del = func_program.get_id_focus_line(self.main_table)
-        if not self.id_del == -1:
-            window_messages.message_delete_record(self)
 
 # TODO реализовать общий модуль для поиска -------------------------------------
     def on_search(self, event):
@@ -65,8 +49,7 @@ class DialogAllCustomers(BaseDialogDatabase):
 
     def call_window_new_or_redact(self, mode_redact=False, id_redact=None):
         """ Вызывает окно создающее новую запись о клиенте.
-            В зависимости от mode_redact решает редактируемая или новая запись
-        """
+            Флаг mode_redact определяет редактируемая или новая запись """
         if mode_redact:
             title_window = "Редактирование данных о клиенте"
         else:
@@ -76,16 +59,4 @@ class DialogAllCustomers(BaseDialogDatabase):
         dlg.ShowModal()
         dlg.Destroy()
 
-        self.refresh_data_in_table()
-
-    def get_row_in_focus(self):
-        """ Получает данные выделенной строки """
-        id_focus = func_program.get_id_focus_line(self.main_table)
-        if not id_focus == -1:
-            row = customers.get_data_id_focus_line(id_focus)
-            return row
-
-    def delete_row(self):
-        """ Удаляет выбранную запись """
-        customers.delete_line_database(self.id_del)
-        self.refresh_data_in_table()
+        func_program.refresh_data_in_table(self.__name__, self.main_table)

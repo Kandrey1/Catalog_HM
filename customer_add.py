@@ -1,5 +1,6 @@
 import wx
 import customers
+import func_database
 
 
 class DialogAddCustomer(wx.Dialog):
@@ -8,6 +9,7 @@ class DialogAddCustomer(wx.Dialog):
         super().__init__(parent, title=title, size=(550, 250))
 
         self.id_redact = id_redact
+        self.parent = parent
 
         self.panel = wx.Panel(self)
         self.main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -109,7 +111,8 @@ class DialogAddCustomer(wx.Dialog):
 
     def load_redact_data(self):
         """ Загружает данные для редактирования если выбрано редактирование """
-        row = customers.get_data_id_focus_line(self.id_redact)
+        row = func_database.get_data_id_focus_line(self.parent.__name__,
+                                                   self.id_redact)
         self.set_in_form_input(row)
 
     def set_in_form_input(self, data):

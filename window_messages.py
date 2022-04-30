@@ -1,5 +1,7 @@
 import wx
 
+import func_database
+
 caption_info = "Информация"
 caption_error = "Ошибка"
 
@@ -23,11 +25,11 @@ def message_info_no_select_line():
     wx.MessageBox(message, caption_info, wx.OK)
 
 
-def message_delete_record(parent):
+def message_delete_record(parent, id_del):
     """ Проверка удаления записи """
     message = "Уверены что хотите удалить эту запись?"
     dlg = wx.MessageDialog(parent, message, caption_info, wx.YES_NO |
                            wx.NO_DEFAULT | wx.ICON_INFORMATION)
     res = dlg.ShowModal()
     if res == wx.ID_YES:
-        parent.delete_row()
+        func_database.delete_row_in_table(parent.__name__, id_del)

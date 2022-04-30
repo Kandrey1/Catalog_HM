@@ -2,11 +2,11 @@ import sqlite3 as sq
 import settings
 
 path_db = settings.path_database
+dict_tables = settings.dict_tables_database
 
 
-def get_from_database(sql):
-    """ Извлекает данные из БД.
-        Функция принимает SQL запрос, возвращает данных списком """
+def request_get_all_rows(sql):
+    """ Извлекает все строки из таблицы БД """
     with sq.connect(path_db) as con:
         cur = con.cursor()
         cur.execute(sql)
@@ -14,19 +14,17 @@ def get_from_database(sql):
     return rows
 
 
-def get_from_database_with_val(sql, val):
-    """ Извлекает несколько записей из БД с "условием".
-        Функция принимает SQL запрос и кортеж val, возвращает данных списком """
-    with sq.connect(path_db) as con:
-        cur = con.cursor()
-        cur.execute(sql, val)
-        rows = cur.fetchall()
-    return rows
+# def request_get_rows_with_value(sql, val):
+#     """ Извлекает несколько строк из БД с условием (для модуля поиска) """
+#     with sq.connect(path_db) as con:
+#         cur = con.cursor()
+#         cur.execute(sql, val)
+#         rows = cur.fetchall()
+#     return rows
 
 
-def get_one_line_from_database_with_val(sql, val):
-    """ Извлекает одну запись из БД с "условием".
-        Функция принимает SQL запрос и кортеж val, возвращает строку """
+def request_get_one_row_with_value(sql, val):
+    """ Извлекает одну запись из БД с условием """
     with sq.connect(path_db) as con:
         cur = con.cursor()
         cur.execute(sql, val)
@@ -34,9 +32,54 @@ def get_one_line_from_database_with_val(sql, val):
     return row
 
 
-def set_in_database(sql, val):
-    """ Записывает данные в БД.
-        Функция принимает SQL запрос и кортеж val содержащий переменные """
+def request_make_with_value(sql, val):
+    """ Исполняет запрос в БДс условием """
     with sq.connect(path_db) as con:
         cur = con.cursor()
         cur.execute(sql, val)
+
+
+# ----------------------- Общие методы -----------------------------------------
+def get_table_name(name_db):
+    """ Возвращает название таблицы в БД """
+    return dict_tables[name_db]["table"]
+
+
+def get_table_pk(name_db):
+    """ Возвращает имя primary key в БД """
+    return dict_tables[name_db]["pk"]
+
+
+def get_table_columns(name_db):
+    """ Возвращает строку с названием колонок(кроме primary key) в БД """
+    return dict_tables[name_db]["columns"]
+
+
+def get_data_all_rows_table_db(name_db):
+    """ Получает все строки из таблицы в БД """
+    sql = f" SELECT * FROM {get_table_name(name_db)} "
+    return request_get_all_rows(sql)
+
+
+def get_data_id_focus_line(name_db, id_focus):
+    """ Возвращает данные выделенной(одной) строки по id_focus """
+    sql = f""" SELECT * FROM {get_table_name(name_db)}
+               WHERE {get_table_pk(name_db)} = ? """
+    return request_get_one_row_with_value(sql, (id_focus,))
+
+
+def copy_row_in_table(name_db, id_copy):
+    """ Копирует строку по id_copy из таблицы БД в конец этой же таблицы """
+    sql = f""" INSERT INTO {get_table_name(name_db)} 
+                            ({get_table_columns(name_db)})
+              SELECT {get_table_columns(name_db)}
+              FROM {get_table_name(name_db)} 
+              WHERE {get_table_pk(name_db)} = ? """
+    request_get_one_row_with_value(sql, (id_copy,))
+
+
+def delete_row_in_table(name_db, id_del):
+    """ Удаляет запись по id_del из таблицы в БД """
+    sql = f""" DELETE FROM {get_table_name(name_db)} 
+               WHERE {get_table_pk(name_db)} = ? """
+    request_make_with_value(sql, (id_del,))

@@ -10,13 +10,10 @@ class BaseDialogDatabase(wx.Dialog):
     """ Шаблон окна базы данных таблицы"""
     def __init__(self, parent, title):
         super().__init__(parent, title=title, size=(1050, 400))
-# ------------------------------------------------------------------------------
+
         size_but_s = settings.size_button_small
         size_but_m = settings.size_button_medium
         size_but_l = settings.size_button_large
-
-        self.dict_tables_database = settings.dict_tables_database
-# ------------------------------------------------------------------------------
 
         self.panel = wx.Panel(self)
         self.box_main = wx.BoxSizer(wx.VERTICAL)
@@ -110,10 +107,9 @@ class BaseDialogDatabase(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.on_search, self.button_search)
         self.Bind(wx.EVT_BUTTON, self.on_search_reset, self.button_search_reset)
 
-# --------------------------- BUTTON start -------------------------------------
-
         self.Centre()
 
+# --------------------------- BUTTON start -------------------------------------
     def on_new(self, event):
         """ Вызывает окно добавления нового"""
         pass
@@ -124,11 +120,18 @@ class BaseDialogDatabase(wx.Dialog):
 
     def on_copy(self, event):
         """ Копирует выбранную строку в таблице """
-        pass
+        id_copy = func_program.get_id_focus_line(self.main_table)
+        if not id_copy == -1:
+            func_database.copy_row_in_table(self.__name__, id_copy)
+            func_program.refresh_data_in_table(self.__name__, self.main_table)
+            func_program.set_cursor_end_table(self.main_table)
 
     def on_delete(self, event):
         """ Удаляет выбранную строку в таблице """
-        pass
+        id_del = func_program.get_id_focus_line(self.main_table)
+        if not id_del == -1:
+            window_messages.message_delete_record(self, id_del)
+            func_program.refresh_data_in_table(self.__name__, self.main_table)
 
     def on_search(self, event):
         """ Запускает поиск по таблице """
@@ -136,7 +139,7 @@ class BaseDialogDatabase(wx.Dialog):
 
     def on_search_reset(self, event):
         """ Сбрасывает данные полученные по итогам поиска """
-        self.refresh_data_in_table()
+        func_program.refresh_data_in_table(self.__name__, self.main_table)
 
 # TODO ---  всплывающее окно справки   -----------------------------------------
     def on_help(self, event):
@@ -146,28 +149,4 @@ class BaseDialogDatabase(wx.Dialog):
     def on_close(self, event):
         """ Закрывает текущее окно"""
         self.Close()
-
 # --------------------------- BUTTON end ---------------------------------------
-
-# ----------------------------- DATA start -------------------------------------
-    def get_data_from_database(self):
-        """ Получает все строки из таблицы в БД.
-            Таблица это значение из словаря dict_table, где ключ
-            это self.__name__   """
-        sql = f" SELECT * FROM {self.dict_tables_database[self.__name__]} "
-        return func_database.get_from_database(sql)
-
-    def set_data_in_table(self, data=None):
-        """ Устанавливает полученные записи в таблицу. Если данные не
-            передавались(по умолчанию) запрашивает данные из БД    """
-        rows = data if data else self.get_data_from_database()
-        rows = func_program.renumber_data_for_set(rows)
-        for row in rows:
-            self.main_table.Append(row)
-
-    def refresh_data_in_table(self):
-        """ Обновляет данные в таблице """
-        self.main_table.DeleteAllItems()
-        self.set_data_in_table()
-
-# ----------------------------- DATA end ---------------------------------------

@@ -1,5 +1,6 @@
 import wx
 
+import func_database
 import materials
 import settings
 
@@ -10,6 +11,7 @@ class DialogAddMaterial(wx.Dialog):
         super().__init__(parent, title=title, size=(550, 190))
 
         self.id_redact = id_redact
+        self.parent = parent
 
         size_but_m = settings.size_button_medium
 
@@ -82,7 +84,8 @@ class DialogAddMaterial(wx.Dialog):
 
     def load_redact_data(self):
         """ Загружает данные для редактирования если выбрано редактирование """
-        row = materials.get_data_id_focus_line(self.id_redact)
+        row = func_database.get_data_id_focus_line(self.parent.__name__,
+                                                   self.id_redact)
         self.set_in_form_input(row)
 
     def set_in_form_input(self, data):

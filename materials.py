@@ -1,6 +1,6 @@
 """
-    Файл содержит класс Material для создания материала
-    И методы для работы с таблицей Materials
+    Файл содержит класс
+    Material описывающий данные материала
 """
 import func_database
 
@@ -40,25 +40,4 @@ class Material:
             val.append(id_redact)
             sql = self.sql_update
 
-        func_database.set_in_database(sql, val)
-
-# ======================= Общие методы для табл. materials =====================
-
-
-# TODO использовать методы универсально для всех таблиц(или многих)
-def load_all_from_database():
-    """ Получает все записи из таблицы materials в БД """
-    sql = """ SELECT * FROM materials """
-    return func_database.get_from_database(sql)
-
-
-def delete_line_database(id_del):
-    """ Удаляет запись по id_del из таблицы materials в БД """
-    sql = "DELETE FROM materials WHERE id_material = ?"
-    func_database.get_from_database_with_val(sql, (id_del,))
-
-
-def get_data_id_focus_line(id_focus):
-    """ Возвращает данные выделенной строки по id_focus"""
-    sql = "SELECT * FROM materials WHERE id_material = ?"
-    return func_database.get_one_line_from_database_with_val(sql, (id_focus,))
+        func_database.request_make_with_value(sql, val)
