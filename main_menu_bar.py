@@ -4,6 +4,8 @@ from customer_add import DialogAddCustomer
 from customers_window_db import DialogAllCustomers
 from material_add import DialogAddMaterial
 from material_window_add import DialogAllMaterials
+from product_add import DialogAddProduct
+from product_window_db import DialogAllProducts
 
 
 class MenuBar(wx.MenuBar):
@@ -47,6 +49,8 @@ class MenuBar(wx.MenuBar):
 		self.products_menu.Append(self.products_all)
 		self.Append(self.products_menu, "Товары")
 
+		self.Bind(wx.EVT_MENU, self.on_product_add, self.product_add)
+		self.Bind(wx.EVT_MENU, self.on_products_all, self.products_all)
 		self.Bind(wx.EVT_MENU, self.on_material_add, self.material_add)
 		self.Bind(wx.EVT_MENU, self.on_materials_all, self.materials_all)
 #   ----------------------------- Товары ---------------------------------------
@@ -86,5 +90,17 @@ class MenuBar(wx.MenuBar):
 	def on_materials_all(self, event):
 		""" Окно всех материалов в БД """
 		dlg = DialogAllMaterials(self.parent)
+		dlg.ShowModal()
+		dlg.Destroy()
+
+	def on_product_add(self, event):
+		""" Добавляет изделие """
+		dlg = DialogAddProduct(self.parent, title="Добавление нового изделие")
+		dlg.ShowModal()
+		dlg.Destroy()
+
+	def on_products_all(self, event):
+		""" Окно всех изделий в БД """
+		dlg = DialogAllProducts(self.parent)
 		dlg.ShowModal()
 		dlg.Destroy()

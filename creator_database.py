@@ -22,7 +22,26 @@ def create_table_materials():
             vendor TEXT)
             """
     create_table(sql)
-# TODO таблица изделий
+
+
+def create_table_products():
+    """ Таблица изделий """
+    sql = """
+			DROP TABLE IF EXISTS products;
+            CREATE TABLE IF NOT EXISTS products (
+            id_product INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            path_ico TEXT,
+            type_prod TEXT,
+            model TEXT,
+            price INTEGER,
+            number INTEGER,
+            about TEXT,
+            size_width INTEGER,
+            size_height INTEGER,
+            size_depth INTEGER,
+            weigh INTEGER )            
+        """
+    create_table(sql)
 # TODO таблица заказов
 # TODO таблица покупок
 
@@ -47,6 +66,7 @@ def create_table_customers():
 def create_database_catalog_hm():
     """ Запускает создание таблиц в базе данных"""
     create_table_materials()
+    create_table_products()
     create_table_customers()
 
 
