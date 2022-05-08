@@ -68,6 +68,14 @@ def get_data_id_focus_line(name_db, id_focus):
     return request_get_one_row_with_value(sql, (id_focus,))
 
 
+def get_id_last_row_in_table(name_db):
+    """ Возвращает id последней записи в таблице """
+    sql = f""" SELECT MAX({get_table_pk(name_db)}) 
+               FROM {get_table_name(name_db)} """
+    row = request_get_all_rows(sql)
+    return row[0][0]
+
+
 def copy_row_in_table(name_db, id_copy):
     """ Копирует строку по id_copy из таблицы БД в конец этой же таблицы """
     sql = f""" INSERT INTO {get_table_name(name_db)} 
@@ -83,3 +91,11 @@ def delete_row_in_table(name_db, id_del):
     sql = f""" DELETE FROM {get_table_name(name_db)} 
                WHERE {get_table_pk(name_db)} = ? """
     request_make_with_value(sql, (id_del,))
+
+
+def update_path_miniature_product(path, id_product):
+    """ Обновляет путь миниатюры изделия """
+    val = [path, id_product]
+    sql = """ UPDATE products SET path_ico = ?
+              WHERE id_product = ? """
+    request_make_with_value(sql, val)

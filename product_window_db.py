@@ -1,3 +1,5 @@
+import func_database
+import func_files
 import func_program
 import window_messages
 from base_frame_database import BaseDialogDatabase
@@ -26,6 +28,26 @@ class DialogAllProducts(BaseDialogDatabase):
         id_redact = func_program.get_id_focus_line(self.main_table)
         if not id_redact == -1:
             self.call_window_new_or_redact(mode_redact=True, id_redact=id_redact)
+
+    def on_copy(self, event):
+        """ Копирует выбранную строку в таблице """
+        id_copy = func_program.get_id_focus_line(self.main_table)
+        if not id_copy == -1:
+            func_database.copy_row_in_table("products_database", id_copy)
+            self.copy_directory_product(id_copy)
+            func_program.refresh_data_in_table("products_database", self.main_table)
+            func_program.set_cursor_end_table(self.main_table)
+
+    def on_delete(self, event):
+        """ Удаляет выбранную строку в таблице и папку изделия в
+            каталоге data\\image """
+        id_del = func_program.get_id_focus_line(self.main_table)
+        if not id_del == -1:
+            window_messages.message_delete_record(self, id_del)
+            path_del = func_files.File.get_path_miniature_product(id_del)
+            path_dir_del = func_files.File.get_dir_path(path_del)
+            func_files.File.delete_dir_with_files(path_dir_del)
+            func_program.refresh_data_in_table("products_database", self.main_table)
 
 # TODO реализовать общий модуль для поиска -------------------------------------
     def on_search(self, event):
@@ -63,3 +85,14 @@ class DialogAllProducts(BaseDialogDatabase):
         dlg.Destroy()
 
         func_program.refresh_data_in_table(self.__name__, self.main_table)
+
+    def copy_directory_product(self, id_copy):
+        """ Копирует существующую папку с файлами об изделии """
+        path_from = func_files.File.get_path_miniature_product(id_copy)
+        id_last = func_database.get_id_last_row_in_table("products_database")
+        func_files.File.create_new_dir_product(id_last)
+
+        if func_files.File.exist_file_miniature(path_from):
+            path_in = func_files.File.get_path_miniature_product(id_last)
+            func_files.File.copy_file(path_from, path_in)
+            func_database.update_path_miniature_product(path_in, id_last)

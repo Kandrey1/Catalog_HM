@@ -5,9 +5,10 @@ width_main_window = 1200
 height_main_window = 500
 
 path_database = "data\\database\\catalog_hm.db"
+path_data_image = "data\\image\\"
 
 path_sys_image = "sys\\image\\"
-
+path_sys_image_default = "sys\\image\\default_pic.jpg"
 
 size_button_small = (120, 20)
 size_button_medium = (120, 30)
