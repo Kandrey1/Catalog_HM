@@ -111,7 +111,7 @@ class DialogAddCustomer(wx.Dialog):
 
     def load_redact_data(self):
         """ Загружает данные для редактирования если выбрано редактирование """
-        row = func_database.get_data_id_focus_line(self.parent.__name__,
+        row = func_database.get_data_id_focus_line(self.parent.table_db,
                                                    self.id_redact)
         self.set_in_form_input(row)
 

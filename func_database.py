@@ -55,9 +55,18 @@ def get_table_columns(name_db):
     return dict_tables[name_db]["columns"]
 
 
-def get_data_all_rows_table_db(name_db):
-    """ Получает все строки из таблицы в БД """
+def get_all_rows(name_db):
+    """ Возвращает все строки из таблицы в БД """
     sql = f" SELECT * FROM {get_table_name(name_db)} "
+    return request_get_all_rows(sql)
+
+
+def get_numeric_all_rows(name_db):
+    """ Возвращает пронумерованные строки из таблицы в БД """
+    sql = f""" SELECT * 
+               FROM ( SELECT ROW_NUMBER() 
+                            OVER(ORDER BY {get_table_pk(name_db)}) as Row, *
+                      FROM {get_table_name(name_db)}) """
     return request_get_all_rows(sql)
 
 
@@ -70,7 +79,7 @@ def get_data_id_focus_line(name_db, id_focus):
 
 def get_id_last_row_in_table(name_db):
     """ Возвращает id последней записи в таблице """
-    sql = f""" SELECT MAX({get_table_pk(name_db)}) 
+    sql = f""" SELECT MAX({get_table_pk(name_db)})
                FROM {get_table_name(name_db)} """
     row = request_get_all_rows(sql)
     return row[0][0]

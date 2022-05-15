@@ -11,6 +11,8 @@ class BaseDialogDatabase(wx.Dialog):
     def __init__(self, parent, title):
         super().__init__(parent, title=title, size=(1050, 400))
 
+        self.table_db = ""
+
         size_but_s = settings.size_button_small
         size_but_m = settings.size_button_medium
         size_but_l = settings.size_button_large
@@ -122,8 +124,8 @@ class BaseDialogDatabase(wx.Dialog):
         """ Копирует выбранную строку в таблице """
         id_copy = func_program.get_id_focus_line(self.main_table)
         if not id_copy == -1:
-            func_database.copy_row_in_table(self.__name__, id_copy)
-            func_program.refresh_data_in_table(self.__name__, self.main_table)
+            func_database.copy_row_in_table(self.table_db, id_copy)
+            func_program.refresh_data_in_table(self.table_db, self.main_table)
             func_program.set_cursor_end_table(self.main_table)
 
     def on_delete(self, event):
@@ -131,7 +133,7 @@ class BaseDialogDatabase(wx.Dialog):
         id_del = func_program.get_id_focus_line(self.main_table)
         if not id_del == -1:
             window_messages.message_delete_record(self, id_del)
-            func_program.refresh_data_in_table(self.__name__, self.main_table)
+            func_program.refresh_data_in_table(self.table_db, self.main_table)
 
     def on_search(self, event):
         """ Запускает поиск по таблице """
@@ -139,7 +141,7 @@ class BaseDialogDatabase(wx.Dialog):
 
     def on_search_reset(self, event):
         """ Сбрасывает данные полученные по итогам поиска """
-        func_program.refresh_data_in_table(self.__name__, self.main_table)
+        func_program.refresh_data_in_table(self.table_db, self.main_table)
 
 # TODO ---  всплывающее окно справки   -----------------------------------------
     def on_help(self, event):

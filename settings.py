@@ -14,19 +14,22 @@ size_button_small = (120, 20)
 size_button_medium = (120, 30)
 size_button_large = (140, 40)
 
-dict_tables_database = {"customers_database":
+dict_tables_database = {"customers":
                             {"table": "customers",
                              "pk": "id_customer",
-                             "columns": "last_name, first_name, middle_name, phone, email, address, vkontakte"
+                             "columns": "last_name, first_name, middle_name,"
+                                        " phone, email, address, vkontakte"
                              },
-                        "materials_database":
+                        "materials":
                             {"table": "materials",
                              "pk": "id_material",
                              "columns": "name, unit, vendor"
                              },
-                        "products_database":
+                        "products":
                             {"table": "products",
                              "pk": "id_product",
-                             "columns": "path_ico, type_prod, model, price, number, about, size_width, size_height, size_depth, weigh"
+                             "columns": "path_ico, type_prod, model, price, "
+                                        "number, about, size_width, "
+                                        "size_height, size_depth, weigh"
                              }
                         }

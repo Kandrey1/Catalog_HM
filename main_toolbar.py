@@ -1,4 +1,6 @@
 import wx
+
+import func_program
 import settings
 import window_messages
 from customer_add import DialogAddCustomer
@@ -52,26 +54,22 @@ class MainToolbar(wx.ToolBar):
     def on_add_product(self, event):
         """ Вызывает окно добавления нового изделия """
         dlg = DialogAddProduct(self.parent, title="Добавление нового изделия")
-        dlg.ShowModal()
-        dlg.Destroy()
+        func_program.start_window(dlg)
 
     def on_all_products(self, event):
         """ Вызывает окно всех изделий в БД """
         dlg = DialogAllProducts(self.parent)
-        dlg.ShowModal()
-        dlg.Destroy()
+        func_program.start_window(dlg)
 
     def on_add_customer(self, event):
         """ Вызывает окно добавления нового клиента """
         dlg = DialogAddCustomer(self.parent, title="Добавление нового клиента")
-        dlg.ShowModal()
-        dlg.Destroy()
+        func_program.start_window(dlg)
 
     def on_all_customers(self, event):
         """ Вызывает окно всех клиентов в БД """
         dlg = DialogAllCustomers(self.parent)
-        dlg.ShowModal()
-        dlg.Destroy()
+        func_program.start_window(dlg)
 
     def on_test(self, event):
         """ Кнопка тест """

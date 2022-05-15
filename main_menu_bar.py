@@ -1,5 +1,6 @@
 import wx
 
+import func_program
 from customer_add import DialogAddCustomer
 from customers_window_db import DialogAllCustomers
 from material_add import DialogAddMaterial
@@ -72,35 +73,29 @@ class MenuBar(wx.MenuBar):
 	def on_customer_add(self, event):
 		""" Добавляет клиента """
 		dlg = DialogAddCustomer(self.parent, title="Добавление нового клиента")
-		dlg.ShowModal()
-		dlg.Destroy()
+		func_program.start_window(dlg)
 
 	def on_customers_all(self, event):
 		""" Окно всех клиентов в БД """
 		dlg = DialogAllCustomers(self.parent)
-		dlg.ShowModal()
-		dlg.Destroy()
+		func_program.start_window(dlg)
 
 	def on_material_add(self, event):
 		""" Добавляет материал """
 		dlg = DialogAddMaterial(self.parent, title="Добавить новый материал")
-		dlg.ShowModal()
-		dlg.Destroy()
+		func_program.start_window(dlg)
 
 	def on_materials_all(self, event):
 		""" Окно всех материалов в БД """
 		dlg = DialogAllMaterials(self.parent)
-		dlg.ShowModal()
-		dlg.Destroy()
+		func_program.start_window(dlg)
 
 	def on_product_add(self, event):
 		""" Добавляет изделие """
 		dlg = DialogAddProduct(self.parent, title="Добавление нового изделие")
-		dlg.ShowModal()
-		dlg.Destroy()
+		func_program.start_window(dlg)
 
 	def on_products_all(self, event):
 		""" Окно всех изделий в БД """
 		dlg = DialogAllProducts(self.parent)
-		dlg.ShowModal()
-		dlg.Destroy()
+		func_program.start_window(dlg)

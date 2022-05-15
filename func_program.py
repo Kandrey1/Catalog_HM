@@ -14,23 +14,10 @@ def get_id_focus_line(table, column_id=1):
         return -1
 
 
-def renumber_data_for_set(data):
-    """ Нумерует полученные строки данных из талицы в БД, возвращает
-        пронумерованные строки """
-    data_transform = []
-    rows = enumerate(data, 1)
-    for row in rows:
-        data_temp = [row[0]]
-        data_temp.extend(row[1])
-        data_transform.append(data_temp)
-    return data_transform
-
-
 def set_data_in_table(name_db, table, data=None):
     """ Устанавливает полученные записи в таблицу. Если данные не
         передавались(по умолчанию) запрашивает данные из БД """
-    rows = data if data else func_database.get_data_all_rows_table_db(name_db)
-    rows = renumber_data_for_set(rows)
+    rows = data if data else func_database.get_numeric_all_rows(name_db)
     for row in rows:
         table.Append(row)
 
@@ -46,3 +33,9 @@ def set_cursor_end_table(table):
     count = table.GetItemCount()
     table.Focus(count - 1)
     table.Select(count - 1)
+
+
+def start_window(dlg):
+    """ Запускает окно и уничтожает после закрытия """
+    dlg.ShowModal()
+    dlg.Destroy()

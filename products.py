@@ -35,19 +35,6 @@ class Product:
                        size_depth = ?, weigh = ?
                   WHERE id_product = ? """
 
-    def set_data_in_class(self, data_list):
-        """ Заполняет экземпляр класса данными data_set (список)"""
-        self.path_ico = data_list[0]
-        self.type_prod = data_list[1]
-        self.model = data_list[2]
-        self.price = data_list[3]
-        self.number = data_list[4]
-        self.about = data_list[5]
-        self.size_width = data_list[6]
-        self.size_height = data_list[7]
-        self.size_depth = data_list[8]
-        self.weigh = data_list[9]
-
     def write_in_database(self, id_redact=None):
         """
         Записывает данные в таблицу products БД. Если id_redact не передан,

@@ -22,12 +22,6 @@ class Material:
                       name = ?, unit = ?, vendor = ?
                   WHERE id_material = ? """
 
-    def set_data_in_class(self, data_list):
-        """ Заполняет экземпляр класса данными data_set (список)"""
-        self.name = data_list[0]
-        self.unit = data_list[1]
-        self.vendor = data_list[2]
-
     def write_in_database(self, id_redact=None):
         """
         Записывает данные в таблицу materials БД. Если id_redact не передан,

@@ -10,11 +10,11 @@ class DialogAllMaterials(BaseDialogDatabase):
     def __init__(self, parent, title="База данных материалов"):
         super().__init__(parent, title=title)
 
-        self.__name__ = "materials_database"
+        self.table_db = "materials"
 
         self.create_columns()
 
-        func_program.set_data_in_table(self.__name__, self.main_table)
+        func_program.set_data_in_table(self.table_db, self.main_table)
 # ----------------------------- Button start -----------------------------------
 
     def on_new(self, event):
@@ -55,4 +55,4 @@ class DialogAllMaterials(BaseDialogDatabase):
         dlg.ShowModal()
         dlg.Destroy()
 
-        func_program.refresh_data_in_table(self.__name__, self.main_table)
+        func_program.refresh_data_in_table(self.table_db, self.main_table)

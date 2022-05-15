@@ -32,4 +32,4 @@ def message_delete_record(parent, id_del):
                            wx.NO_DEFAULT | wx.ICON_INFORMATION)
     res = dlg.ShowModal()
     if res == wx.ID_YES:
-        func_database.delete_row_in_table(parent.__name__, id_del)
+        func_database.delete_row_in_table(parent.table_db, id_del)

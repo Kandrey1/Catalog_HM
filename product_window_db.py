@@ -1,4 +1,5 @@
 import func_database
+import func_decorators
 import func_files
 import func_program
 import window_messages
@@ -11,11 +12,11 @@ class DialogAllProducts(BaseDialogDatabase):
     def __init__(self, parent, title="База данных изделий"):
         super().__init__(parent, title=title)
 
-        self.__name__ = 'products_database'
+        self.table_db = "products"
 
         self.create_columns()
 
-        func_program.set_data_in_table(self.__name__, self.main_table)
+        func_program.set_data_in_table(self.table_db, self.main_table)
 # ----------------------------- Button start -----------------------------------
 
     def on_new(self, event):
@@ -33,9 +34,9 @@ class DialogAllProducts(BaseDialogDatabase):
         """ Копирует выбранную строку в таблице """
         id_copy = func_program.get_id_focus_line(self.main_table)
         if not id_copy == -1:
-            func_database.copy_row_in_table("products_database", id_copy)
+            func_database.copy_row_in_table(self.table_db, id_copy)
             self.copy_directory_product(id_copy)
-            func_program.refresh_data_in_table("products_database", self.main_table)
+            func_program.refresh_data_in_table(self.table_db, self.main_table)
             func_program.set_cursor_end_table(self.main_table)
 
     def on_delete(self, event):
@@ -47,7 +48,7 @@ class DialogAllProducts(BaseDialogDatabase):
             path_del = func_files.File.get_path_miniature_product(id_del)
             path_dir_del = func_files.File.get_dir_path(path_del)
             func_files.File.delete_dir_with_files(path_dir_del)
-            func_program.refresh_data_in_table("products_database", self.main_table)
+            func_program.refresh_data_in_table(self.table_db, self.main_table)
 
 # TODO реализовать общий модуль для поиска -------------------------------------
     def on_search(self, event):
@@ -84,12 +85,12 @@ class DialogAllProducts(BaseDialogDatabase):
         dlg.ShowModal()
         dlg.Destroy()
 
-        func_program.refresh_data_in_table(self.__name__, self.main_table)
+        func_program.refresh_data_in_table(self.table_db, self.main_table)
 
     def copy_directory_product(self, id_copy):
         """ Копирует существующую папку с файлами об изделии """
         path_from = func_files.File.get_path_miniature_product(id_copy)
-        id_last = func_database.get_id_last_row_in_table("products_database")
+        id_last = func_database.get_id_last_row_in_table(self.table_db)
         func_files.File.create_new_dir_product(id_last)
 
         if func_files.File.exist_file_miniature(path_from):

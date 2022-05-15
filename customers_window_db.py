@@ -1,4 +1,3 @@
-import customers
 import func_program
 import window_messages
 from base_frame_database import BaseDialogDatabase
@@ -10,11 +9,11 @@ class DialogAllCustomers(BaseDialogDatabase):
     def __init__(self, parent, title="База данных клиентов"):
         super().__init__(parent, title=title)
 
-        self.__name__ = "customers_database"
+        self.table_db = "customers"
 
         self.create_columns()
 
-        func_program.set_data_in_table(self.__name__, self.main_table)
+        func_program.set_data_in_table(self.table_db, self.main_table)
 # ----------------------------- Button start -----------------------------------
 
     def on_new(self, event):
@@ -56,7 +55,6 @@ class DialogAllCustomers(BaseDialogDatabase):
             title_window = "Добавление нового клиента"
 
         dlg = DialogAddCustomer(self, title=title_window, id_redact=id_redact)
-        dlg.ShowModal()
-        dlg.Destroy()
+        func_program.start_window(dlg)
 
-        func_program.refresh_data_in_table(self.__name__, self.main_table)
+        func_program.refresh_data_in_table(self.table_db, self.main_table)

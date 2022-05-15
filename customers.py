@@ -30,16 +30,6 @@ class Customer:
                       email = ?, address = ?, vkontakte = ?
                   WHERE id_customer = ? """
 
-    def set_data_in_class(self, data_list):
-        """ Заполняет экземпляр класса данными data_set (список)"""
-        self.last_name = data_list[0]
-        self.first_name = data_list[1]
-        self.middle_name = data_list[2]
-        self.phone = data_list[3]
-        self.email = data_list[4]
-        self.address = data_list[5]
-        self.vkontakte = data_list[6]
-
     def write_in_database(self, id_redact=None):
         """ Записывает данные в таблицу customers БД. Если id_redact не передан,
             то выполняется sql запрос на добавление, иначе на изменение

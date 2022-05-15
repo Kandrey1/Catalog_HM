@@ -193,14 +193,14 @@ class DialogAddProduct(wx.Dialog):
         id_product = self.id_redact
 
         if not self.id_redact:
-            id_now = func_database.get_id_last_row_in_table("products_database")
+            id_now = func_database.get_id_last_row_in_table("products")
             id_product = id_now
             func_files.File.create_new_dir_product(id_product)
 
         path = self.path_sys_image_default
 
         if self.miniature_product:
-            self.save_mini_pic_product(path, id_product)
+            self.save_mini_pic_product(id_product)
             path = func_files.File.get_path_miniature_product(id_product)
 
         func_database.update_path_miniature_product(path, id_product)
@@ -244,7 +244,7 @@ class DialogAddProduct(wx.Dialog):
 
     def load_redact_data(self):
         """ Загружает данные для редактирования если выбрано редактирование """
-        row = func_database.get_data_id_focus_line(self.parent.__name__,
+        row = func_database.get_data_id_focus_line(self.parent.table_db,
                                                    self.id_redact)
         self.set_in_form_input(row)
 
@@ -261,7 +261,7 @@ class DialogAddProduct(wx.Dialog):
         self.text_input_depth.SetValue(data[9])
         self.text_input_weigh.SetValue(data[10])
 
-    def save_mini_pic_product(self, path_dir, id_product):
+    def save_mini_pic_product(self, id_product):
         """ Сохраняет миниатюру в папку изделия """
         path_from = self.path_data_image + "temp_image.jpg"
         self.path_save = func_files.File.get_path_miniature_product(id_product)
