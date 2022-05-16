@@ -1,3 +1,4 @@
+import components
 import func_database
 import window_messages
 
@@ -33,6 +34,13 @@ def set_cursor_end_table(table):
     count = table.GetItemCount()
     table.Focus(count - 1)
     table.Select(count - 1)
+
+
+def set_cursor_on_row(table, id_line):
+    """ Ставит курсор на заданную строку """
+    line = components.Component.get_number_line(id_line)
+    table.Focus(line - 1)
+    table.Select(line - 1)
 
 
 def start_window(dlg):

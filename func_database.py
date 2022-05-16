@@ -14,15 +14,6 @@ def request_get_all_rows(sql):
     return rows
 
 
-# def request_get_rows_with_value(sql, val):
-#     """ Извлекает несколько строк из БД с условием (для модуля поиска) """
-#     with sq.connect(path_db) as con:
-#         cur = con.cursor()
-#         cur.execute(sql, val)
-#         rows = cur.fetchall()
-#     return rows
-
-
 def request_get_one_row_with_value(sql, val):
     """ Извлекает одну запись из БД с условием """
     with sq.connect(path_db) as con:

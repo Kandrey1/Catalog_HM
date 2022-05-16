@@ -25,6 +25,12 @@ dict_tables_database = {"customers":
                              "pk": "id_material",
                              "columns": "name, unit, vendor"
                              },
+                        "components":
+                            {"table": "components",
+                             "pk": "id_component",
+                             "columns": "product_id, material_id, number, "
+                                        "price_one"
+                             },
                         "products":
                             {"table": "products",
                              "pk": "id_product",

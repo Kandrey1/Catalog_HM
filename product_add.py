@@ -2,8 +2,11 @@ import wx
 
 import func_database
 import func_files
+import func_program
 import products
 import settings
+from component_add import DialogAddComponent
+from components import Component
 
 
 class DialogAddProduct(wx.Dialog):
@@ -18,7 +21,7 @@ class DialogAddProduct(wx.Dialog):
         self.path_sys_image_default = settings.path_sys_image_default
         self.path_data_image = settings.path_data_image
         self.parent = parent
-        self.id_redact = id_redact
+        self.id_redact_product = id_redact
         self.miniature_product = False
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -54,26 +57,27 @@ class DialogAddProduct(wx.Dialog):
         self.box_buts_materials.AddSpacer(20)
         self.box_buts_materials.Add(self.but_del, 0, wx.BOTTOM, border=5)
 
-        self.Bind(wx.EVT_BUTTON, self.on_add_material, self.but_new)
-        self.Bind(wx.EVT_BUTTON, self.on_redact_material, self.but_redact)
-        self.Bind(wx.EVT_BUTTON, self.on_copy_material, self.but_copy)
-        self.Bind(wx.EVT_BUTTON, self.on_del_material, self.but_del)
+        self.Bind(wx.EVT_BUTTON, self.on_add_component, self.but_new)
+        self.Bind(wx.EVT_BUTTON, self.on_redact_component, self.but_redact)
+        self.Bind(wx.EVT_BUTTON, self.on_copy_component, self.but_copy)
+        self.Bind(wx.EVT_BUTTON, self.on_del_component, self.but_del)
 
-        self.table_materials = wx.ListCtrl(self.panel, wx.ID_ANY,
+        self.table_components = wx.ListCtrl(self.panel, wx.ID_ANY,
                                            style=wx.LC_REPORT, size=(-1, 150))
-        self.table_materials.SetFont(wx.Font(wx.FontInfo(12)))
-        self.table_materials.SetBackgroundColour("#f0f0f0")
+        self.table_components.SetFont(wx.Font(wx.FontInfo(12)))
+        self.table_components.SetBackgroundColour("#f0f0f0")
 
-        self.table_materials.InsertColumn(0, '№', width=40)
-        self.table_materials.InsertColumn(1, 'ID Материала', width=0)
-        self.table_materials.InsertColumn(2, 'Материал', width=200)
-        self.table_materials.InsertColumn(3, 'Кол-во', width=50)
-        self.table_materials.InsertColumn(4, 'Ед.измерения', width=50)
-        self.table_materials.InsertColumn(5, 'Стоимость 1 поз.', width=100)
-        self.table_materials.InsertColumn(6, 'Поставщик',  width=100)
+        self.table_components.InsertColumn(0, '№', width=40)
+        self.table_components.InsertColumn(1, 'ID Компонента', width=00)
+        self.table_components.InsertColumn(2, 'ID Материала', width=0)
+        self.table_components.InsertColumn(3, 'Материал', width=200)
+        self.table_components.InsertColumn(4, 'Кол-во', width=50)
+        self.table_components.InsertColumn(5, 'Ед.измерения', width=50)
+        self.table_components.InsertColumn(6, 'Стоимость 1 поз.', width=100)
+        self.table_components.InsertColumn(7, 'Поставщик',  width=100)
 
         self.hbox_materials = wx.BoxSizer(wx.HORIZONTAL)
-        self.hbox_materials.Add(self.table_materials, 1, wx.EXPAND | wx.ALL, 5)
+        self.hbox_materials.Add(self.table_components, 1, wx.EXPAND | wx.ALL, 5)
         self.hbox_materials.Add(self.box_buts_materials, 0, wx.ALL, 5)
 
         self.box_image_materials.Add(self.box_image, 0, wx.ALL, 5)
@@ -177,22 +181,24 @@ class DialogAddProduct(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.on_save_product, self.button_save)
         self.Bind(wx.EVT_BUTTON, self.on_close, self.button_cancel)
 
-        if self.id_redact:
+        if self.id_redact_product:
             self.load_redact_data()
+            self.refresh_table_components()
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
     def on_close(self, event):
         """ Закрывает текущее окно"""
+        self.remove_temp_components()
         self.Close()
 
     def on_save_product(self, event):
         """ Сохранение введенных данных об изделии в БД """
         self.save_in_class()
-        self.product.write_in_database(self.id_redact)
-        id_product = self.id_redact
+        self.product.write_in_database(self.id_redact_product)
+        id_product = self.id_redact_product
 
-        if not self.id_redact:
+        if not self.id_redact_product:
             id_now = func_database.get_id_last_row_in_table("products")
             id_product = id_now
             func_files.File.create_new_dir_product(id_product)
@@ -204,6 +210,8 @@ class DialogAddProduct(wx.Dialog):
             path = func_files.File.get_path_miniature_product(id_product)
 
         func_database.update_path_miniature_product(path, id_product)
+
+        self.save_components(id_product)
 
         self.Close()
 
@@ -226,26 +234,37 @@ class DialogAddProduct(wx.Dialog):
         if path_selected:
             self.set_and_save_temp_mini_pic(path_selected)
 
-    def on_add_material(self, event):
-        """ Вызывает окно добавление материала """
-        pass
+    def on_add_component(self, event):
+        """ Вызывает окно добавление компонента """
+        dlg = DialogAddComponent(self, title="Добавление нового компонента")
+        func_program.start_window(dlg)
+        self.refresh_table_components()
 
-    def on_redact_material(self, event):
-        """ Вызывает окно редактирования материала """
-        pass
+    def on_redact_component(self, event):
+        """ Вызывает окно редактирования компонента """
+        id_redact_component = func_program.get_id_focus_line(self.table_components)
+        if not id_redact_component == -1:
+            dlg = DialogAddComponent(self, title="Редактирование компонента",
+                                     id_redact=id_redact_component)
+            func_program.start_window(dlg)
+            self.refresh_table_components()
 
-    def on_copy_material(self, event):
-        """ Копирует выбранный материал в списке матеров в изделии """
-        pass
+    def on_copy_component(self, event):
+        """ Копирует выбранный компонент в списке компонентов в изделии """
+        id_copy = func_program.get_id_focus_line(self.table_components)
+        func_database.copy_row_in_table("components", id_copy)
+        self.refresh_table_components()
 
-    def on_del_material(self, event):
-        """ Удаляет выбранный материал из списка матеров в изделии """
-        pass
+    def on_del_component(self, event):
+        """ Удаляет выбранный компонент из списка компонентов в изделии """
+        id_del = func_program.get_id_focus_line(self.table_components)
+        func_database.delete_row_in_table("components", id_del)
+        self.refresh_table_components()
 
     def load_redact_data(self):
         """ Загружает данные для редактирования если выбрано редактирование """
         row = func_database.get_data_id_focus_line(self.parent.table_db,
-                                                   self.id_redact)
+                                                   self.id_redact_product)
         self.set_in_form_input(row)
 
     def set_in_form_input(self, data):
@@ -275,3 +294,25 @@ class DialogAddProduct(wx.Dialog):
         func_files.ConvertImages.save_image(img_convert, path_temp_mini)
         self.miniature_product = True
         self.image.SetBitmap(wx.BitmapFromImage(path_temp_mini))
+
+    def refresh_table_components(self):
+        """ Обновляет таблицу компонентов """
+        self.table_components.DeleteAllItems()
+        if not self.id_redact_product:
+            rows = Component.get_temp_components()
+        else:
+            rows = Component.get_all_components_product(self.id_redact_product)
+        for row in rows:
+            self.table_components.Append(row)
+
+    def remove_temp_components(self):
+        """ Удаляет все временные компоненты из таблицы в БД """
+        list_id = Component.get_id_temp_components()
+        for id_tmp in list_id:
+            func_database.delete_row_in_table("components", id_tmp)
+
+    def save_components(self, product_id):
+        """ Сохраняет временные компоненты с product_id изделия """
+        list_id = Component.get_id_temp_components()
+        for id_tmp in list_id:
+            Component.set_product_id_in_component(id_tmp, product_id)
