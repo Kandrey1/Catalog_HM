@@ -1,7 +1,7 @@
 import wx
-
 import func_database
 import func_program
+import search
 import settings
 import window_messages
 
@@ -61,15 +61,10 @@ class BaseDialogDatabase(wx.Dialog):
 
         self.input_data_search = wx.TextCtrl(self.panel, size=(400, 20),
                                              value="Введите текст поиска")
-
-# TODO словарь с полями в зависимости от таблицы
-#  или выгружать все поля таблицы и заносить в список комбобокса
-        self.combobox_list = ["Поиск по колонке", "Поле1", "Поле2", "Поле3"]
-
+        self.combobox_list = ["Выберите колонку"]
         self.combobox_search = wx.ComboBox(self.panel,
                                            choices=self.combobox_list,
                                            style=wx.CB_READONLY)
-        self.combobox_search.SetSelection(0)
 
         self.button_search = wx.Button(self.panel, label="Поиск",
                                        size=size_but_s)
@@ -137,7 +132,12 @@ class BaseDialogDatabase(wx.Dialog):
 
     def on_search(self, event):
         """ Запускает поиск по таблице """
-        pass
+        column = self.combobox_search.GetStringSelection()
+        text_find = self.input_data_search.GetValue()
+        if search.validation_search(text_find, column):
+            rows = search.search_text(self.table_db, column, text_find)
+            self.main_table.DeleteAllItems()
+            func_program.set_data_in_table(self.table_db, self.main_table, rows)
 
     def on_search_reset(self, event):
         """ Сбрасывает данные полученные по итогам поиска """
@@ -152,3 +152,10 @@ class BaseDialogDatabase(wx.Dialog):
         """ Закрывает текущее окно"""
         self.Close()
 # --------------------------- BUTTON end ---------------------------------------
+
+    def refresh_combobox_search(self):
+        """ Обновляет список """
+        list_search = func_database.get_columns_search(self.table_db).keys()
+        self.combobox_list.extend(list_search)
+        self.combobox_search.Set(self.combobox_list)
+        self.combobox_search.SetSelection(0)

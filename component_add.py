@@ -1,4 +1,5 @@
 import wx
+import search
 from components import Component
 import func_database
 import func_program
@@ -130,7 +131,7 @@ class DialogAddComponent(wx.Dialog):
             self.load_redact_data()
 
     def on_close(self, event):
-        """ Закрывает текущее окно"""
+        """ Закрывает текущее окно """
         self.Close()
 
     def on_save_component(self, event):
@@ -144,10 +145,12 @@ class DialogAddComponent(wx.Dialog):
         else:
             wx.MessageBox("Выберите материал в таблице.", "Информация", wx.OK)
 
-    # TODO после создания общего модуля поиска
     def search_in_materials(self, event):
-        """ Осуществляет поиск в базе созданных материалов"""
-        pass
+        """ Осуществляет поиск в базе созданных материалов """
+        text_find = self.text_input_search.GetValue()
+        rows = search.search_in_component(text_find)
+        self.table_materials.DeleteAllItems()
+        func_program.set_data_in_table(self.table_db, self.table_materials, rows)
 
     def select_material(self, event):
         """ Кнопка выбора материала. Работает только при выбранной строке """
@@ -158,7 +161,7 @@ class DialogAddComponent(wx.Dialog):
             self.on_select = True
 
     def set_select_in_component(self, row):
-        """ Устанавливает данные выбранной строки в компонент"""
+        """ Устанавливает данные выбранной строки в компонент """
         self.id_material = row[0]
         self.text_material_out.SetValue(row[1])
         self.text_text_unit_out.SetValue(row[2])

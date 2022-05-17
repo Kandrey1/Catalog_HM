@@ -1,5 +1,4 @@
 import func_database
-import func_decorators
 import func_files
 import func_program
 import window_messages
@@ -13,6 +12,8 @@ class DialogAllProducts(BaseDialogDatabase):
         super().__init__(parent, title=title)
 
         self.table_db = "products"
+
+        self.refresh_combobox_search()
 
         self.create_columns()
 
@@ -49,11 +50,6 @@ class DialogAllProducts(BaseDialogDatabase):
             path_dir_del = func_files.File.get_dir_path(path_del)
             func_files.File.delete_dir_with_files(path_dir_del)
             func_program.refresh_data_in_table(self.table_db, self.main_table)
-
-# TODO реализовать общий модуль для поиска -------------------------------------
-    def on_search(self, event):
-        """ Поиск в базе данных """
-        window_messages.message_info_not_realized()
 
 # ----------------------------- Button end -------------------------------------
 

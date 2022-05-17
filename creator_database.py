@@ -24,6 +24,20 @@ def create_table_materials():
     create_table(sql)
 
 
+def create_table_components():
+    """ Таблица компонентов в изделии """
+    sql = """
+			DROP TABLE IF EXISTS components;
+            CREATE TABLE IF NOT EXISTS components (
+            id_component INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            product_id INTEGER,
+            material_id INTEGER NOT NULL,
+            number INTEGER,
+            price_one TEXT)
+            """
+    create_table(sql)
+
+
 def create_table_products():
     """ Таблица изделий """
     sql = """
@@ -66,6 +80,7 @@ def create_table_customers():
 def create_database_catalog_hm():
     """ Запускает создание таблиц в базе данных"""
     create_table_materials()
+    create_table_components()
     create_table_products()
     create_table_customers()
 

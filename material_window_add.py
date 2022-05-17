@@ -1,6 +1,4 @@
 import func_program
-import materials
-import window_messages
 from base_frame_database import BaseDialogDatabase
 from material_add import DialogAddMaterial
 
@@ -11,6 +9,8 @@ class DialogAllMaterials(BaseDialogDatabase):
         super().__init__(parent, title=title)
 
         self.table_db = "materials"
+
+        self.refresh_combobox_search()
 
         self.create_columns()
 
@@ -27,11 +27,6 @@ class DialogAllMaterials(BaseDialogDatabase):
         id_redact = func_program.get_id_focus_line(self.main_table)
         if not id_redact == -1:
             self.call_window_new_or_redact(mode_redact=True, id_redact=id_redact)
-
-# TODO реализовать общий модуль для поиска -------------------------------------
-    def on_search(self, event):
-        """ Поиск в базе данных """
-        window_messages.message_info_not_realized()
 
 # ----------------------------- Button end -------------------------------------
 

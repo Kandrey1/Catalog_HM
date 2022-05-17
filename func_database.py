@@ -46,6 +46,11 @@ def get_table_columns(name_db):
     return dict_tables[name_db]["columns"]
 
 
+def get_columns_search(name_db):
+    """ Возвращает словарь для поиска key:value колонка:имя в таблице БД """
+    return dict_tables[name_db]["col_search"]
+
+
 def get_all_rows(name_db):
     """ Возвращает все строки из таблицы в БД """
     sql = f" SELECT * FROM {get_table_name(name_db)} "

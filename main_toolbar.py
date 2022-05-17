@@ -31,6 +31,8 @@ class MainToolbar(wx.ToolBar):
         self.AddSeparator()
         self.AddSeparator()
         self.AddSeparator()
+        self.search = self.AddTool(wx.ID_ANY, "",
+                                        wx.Bitmap(self.path_ico + "search.png"))
         self.AddSeparator()
         self.AddSeparator()
         self.AddSeparator()
@@ -42,6 +44,8 @@ class MainToolbar(wx.ToolBar):
 
         self.Bind(wx.EVT_TOOL, self.on_add_product, self.product_add)
         self.Bind(wx.EVT_TOOL, self.on_all_products, self.products_all)
+
+        self.Bind(wx.EVT_TOOL, self.on_search, self.search)
 
         self.Bind(wx.EVT_TOOL, self.on_test, self.bar_test_one)
 
@@ -70,6 +74,10 @@ class MainToolbar(wx.ToolBar):
         """ Вызывает окно всех клиентов в БД """
         dlg = DialogAllCustomers(self.parent)
         func_program.start_window(dlg)
+
+    def on_search(self, event):
+        """ Вызывает окно поиска в программе """
+        window_messages.message_info_not_realized()
 
     def on_test(self, event):
         """ Кнопка тест """
